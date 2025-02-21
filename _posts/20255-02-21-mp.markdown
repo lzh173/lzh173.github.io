@@ -1,0 +1,13 @@
+---
+layout:       post
+title:        "我的第一篇博客"
+author:       "lzh-bi7kga"
+header-style: text
+catalog:      true
+tags:
+    - Web
+    - JavaScript
+---
+### 我的第一篇博客
+这只是一篇测试文档而已。
+**如果你是洪老师，请点击此[链接](https://lzh173.github.io/dyf-djb-01.html "德育分登记表")跳转到初一八班的德育分登记表页面**

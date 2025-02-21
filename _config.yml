@@ -1,7 +1,7 @@
 # Site settings
 title: lzh Blog
 SEOTitle: 电教委的博客 | lzh Blog
-header-img: img/home-bg.jpg
+header-img: img/avatar-hux.j.png
 email: p20210125@foxmail.com
 description: "这里是 初一八班电教委 的个人博客，与你一起发现更大的世界 | 要做一个有梦想的人"
 keyword: "林哲瀚, BI7KGA, lzh, 电教委的博客, lzh Blog, 博客, 个人网站, 互联网, Web, Python, React, React Native, 前端, 设计"
@@ -90,12 +90,12 @@ page-mathjax: false
 # Friends
 friends:
   [
-    { title: "乱序（Midare）", href: "http://mida.re/" },
-    { title: "Ebn Zhang", href: "https://ebnbin.dev/" },
-    { title: "Kun Qian", href: "http://kunq.me" },
-    { title: "Sherry Woo", href: "https://sherrywoo.me/" },
-    { title: "SmdCn", href: "http://blog.smdcn.net" },
-    { title: "JiyinYiyong", href: "http://tiye.me/" },
-    { title: "DHong Say", href: "http://dhong.co" },
-    { title: "尹峰以为", href: "http://ingf.github.io/" },
+    #{ title: "乱序（Midare）", href: "http://mida.re/" },
+    #{ title: "Ebn Zhang", href: "https://ebnbin.dev/" },
+    #{ title: "Kun Qian", href: "http://kunq.me" },
+    #{ title: "Sherry Woo", href: "https://sherrywoo.me/" },
+    #{ title: "SmdCn", href: "http://blog.smdcn.net" },
+    #{ title: "JiyinYiyong", href: "http://tiye.me/" },
+    #{ title: "DHong Say", href: "http://dhong.co" },
+    #{ title: "尹峰以为", href: "http://ingf.github.io/" },
   ]
