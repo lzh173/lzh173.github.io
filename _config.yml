@@ -1,11 +1,11 @@
 # Site settings
-title: Hux Blog
-SEOTitle: 黄玄的博客 | Hux Blog
+title: lzh Blog
+SEOTitle: 电教委的博客 | lzh Blog
 header-img: img/home-bg.jpg
-email: huxpro@gmail.com
-description: "这里是 @Hux黄玄 的个人博客，与你一起发现更大的世界 | 要做一个有 swag 的程序员"
-keyword: "黄玄, Hux黄玄, Hux, 鬼栈, huxpro, @huxpro, 黄玄的博客, Hux Blog, 博客, 个人网站, 互联网, Web, JavaScript, React, React Native, 前端, 设计"
-url: "https://huangxuan.me" # your host, for absolute URL
+email: p20210125@foxmail.com
+description: "这里是 初一八班电教委 的个人博客，与你一起发现更大的世界 | 要做一个有梦想的人"
+keyword: "林哲瀚, BI7KGA, lzh, 电教委的博客, lzh Blog, 博客, 个人网站, 互联网, Web, Python, React, React Native, 前端, 设计"
+url: "https://lzh173.github.io/" # your host, for absolute URL
 baseurl: "" # for example, '/blog' if your blog hosted on 'host/blog'
 
 # Publish posts or collection documents with a future date.
@@ -13,10 +13,10 @@ future: true
 
 # SNS settings
 RSS: false
-weibo_username: huxpro
-zhihu_username: huxpro
-github_username: huxpro
-twitter_username: huxpro
+weibo_username: lzh173
+zhihu_username: lzh173
+github_username: lzh173
+twitter_username: lzh173
 #facebook_username:  huxpro
 #linkedin_username:  firstname-lastname-idxxxx
 
@@ -59,8 +59,7 @@ kramdown:
       start_line: 1
 
 # Disqus settings
-disqus_username: hux
-
+disqus_username: lzh
 # Netease settings
 netease_comment: false
 
@@ -70,11 +69,11 @@ netease_comment: false
 
 # Google Analytics
 ga_track_id: "UA-49627206-1" # Format: UA-xxxxxx-xx
-ga_domain: huangxuan.me
+ga_domain: lzh173.github.io
 
 # Sidebar settings
 sidebar: true # whether or not using Sidebar.
-sidebar-about-description: "要做一个有 swag 的程序员 <br> React Team @ Meta"
+sidebar-about-description: "要做一个有梦想的人 <br> lzh @ Meta"
 sidebar-avatar: https://github.com/Huxpro.png # use absolute URL, seeing it's used in both `/` and `/about/`
 
 # Featured Tags
