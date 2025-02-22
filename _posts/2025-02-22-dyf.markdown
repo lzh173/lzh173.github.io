@@ -1,7 +1,7 @@
 ---
 layout:       post
 title:        "0221德育分扣分登记"
-author:       "电教委员"
+author:       "lzh-djw"
 header-style: text
 catalog:      true
 ---
