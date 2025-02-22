@@ -1,0 +1,59 @@
+---
+layout:       post
+title:        "德育分登记表的使用方法"
+author:       "lzh-bi7kga"
+header-style: text
+catalog:      true
+tags:
+    - JavaScript
+    - csv
+    - cnmUTF-8
+---
+
+
+_虽然说这东西写出来不知道可以给谁看，但还是写出来了，老师你将就着看一下吧
+~~(写作业都没这么认真）~~_
+
+-------
+**本文章遵循`MIT`开源协议。**
+
+-------
+
+## 首先，这是我们班的德育分登记表页面
+![图片](https://lzh173.github.io/img/8f6ab7fd5ccf01155e2c8f8b5ddfa64b.png"登记表")
+
+在填写完本周的德育分扣分/加分情况后，请点击页面底部的<em>下载今日数据<em/>
+
+### 然后，你的浏览器应该会弹出这样的下载页面：
+![图片](https://lzh173.github.io/img/QQ20250223-002307.png"下载页面")
+
+保存之后，下载的`20xx-xx-xx-班级积分数据.csv`由于编码问题，是**不可以**使用你的WPS/Microsoft Excel直接打开的。
+
+所以，在你的WPS/Microsoft Excel里找到`数据-从文本/csv获取数据`，并用这个导入你的WPS/Microsoft Excel
+
+好了，这时候应该已经没有编码错误了，网页导出的表格就应该可以发出来了。:blush:
+
+__我的电子邮箱：p20210125@foxmail.com__
+
+
+## MIT 许可证协议
+浏览此文章即代表同意此协议
+>Copyright (c) 2025 lzh173.github.io
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
