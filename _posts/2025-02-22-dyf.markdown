@@ -4,9 +4,6 @@ title:        "0221德育分扣分登记"
 author:       "电教委员"
 header-style: text
 catalog:      true
-tags:
-    - 德育分
-    - 纪律
 ---
 
 ## 将就着看吧 
