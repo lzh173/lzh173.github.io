@@ -6,8 +6,6 @@ header-style: text
 catalog:      true
 tags:
     - JavaScript
-    - csv
-    - cnmUTF-8
 ---
 
 
