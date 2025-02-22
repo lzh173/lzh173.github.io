@@ -18,12 +18,12 @@ _虽然说这东西写出来不知道可以给谁看，但还是写出来了，�
 -------
 
 ## 首先，这是我们班的德育分登记表页面
-![图片](https://lzh173.github.io/img/8f6ab7fd5ccf01155e2c8f8b5ddfa64b.png"登记表")
+![](https://lzh173.github.io/img/8f6ab7fd5ccf01155e2c8f8b5ddfa64b.png)
 
 在填写完本周的德育分扣分/加分情况后，请点击页面底部的<em>下载今日数据<em/>
 
 ### 然后，你的浏览器应该会弹出这样的下载页面：
-![图片](https://lzh173.github.io/img/QQ20250223-002307.png"下载页面")
+![](https://lzh173.github.io/img/QQ20250223-002307.png)
 
 保存之后，下载的`20xx-xx-xx-班级积分数据.csv`由于编码问题，是**不可以**使用你的WPS/Microsoft Excel直接打开的。
 
