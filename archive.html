@@ -11,6 +11,15 @@ https://github.com/kitian616/jekyll-TeXt-theme
 -->
 <!-- Page Header -->
 {% include intro-header.html type='page' short=true %}
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?cad5250cde745611b444ded132f2199f";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
 
 <!-- Main Content -->
 <div class="container">
@@ -26,8 +35,8 @@ https://github.com/kitian616/jekyll-TeXt-theme
 				{% capture tags %}
 				{% for tag in site.tags %}
 				<a data-sort="{{ site.posts.size | minus: tag[1].size | prepend: '0000' | slice: -4, 4 }}"
-					data-encode="{{ tag[0] | strip | url_encode }}" class="tag-button" title="{{ tag[0] }}"
-					rel="{{ tag[1].size }}">
+				   data-encode="{{ tag[0] | strip | url_encode }}" class="tag-button" title="{{ tag[0] }}"
+				   rel="{{ tag[1].size }}">
 					{{ tag[0] }}
 					<sup>{{tag[1].size}}</sup>
 				</a>__SEPERATOR__
