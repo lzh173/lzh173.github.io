@@ -28,6 +28,15 @@
 // });
 
 // responsive tables
+
+
+var _hmt = _hmt || [];
+(function () {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?cad5250cde745611b444ded132f2199f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
 $(document).ready(function() {
     $("table").wrap("<div class='table-responsive'></div>");
     $("table").addClass("table");

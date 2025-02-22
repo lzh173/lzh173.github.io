@@ -65,11 +65,11 @@ netease_comment: false
 
 # Analytics settings
 # Baidu Analytics
-# ba_track_id: [your track id]
+ba_track_id: [91ae4c8109047f90ea355c41f058d059]
 
 # Google Analytics
 #ga_track_id: "UA-49627206-1" # Format: UA-xxxxxx-xx
-#ga_domain: lzh173.github.io
+ga_domain: lzh173.github.io
 
 # Sidebar settings
 sidebar: true # whether or not using Sidebar.
