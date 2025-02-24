@@ -13,10 +13,10 @@ future: true
 
 # SNS settings
 RSS: false
-#weibo_username: lzh173
-#zhihu_username: lzh173
+weibo_username: lzh173
+zhihu_username: lzh173
 github_username: lzh173
-#twitter_username: lzh173
+twitter_username: lzh173
 #facebook_username:  huxpro
 #linkedin_username:  firstname-lastname-idxxxx
 
@@ -65,11 +65,11 @@ netease_comment: false
 
 # Analytics settings
 # Baidu Analytics
-# ba_track_id: [your track id]
+ba_track_id: [91ae4c8109047f90ea355c41f058d059]
 
 # Google Analytics
 #ga_track_id: "UA-49627206-1" # Format: UA-xxxxxx-xx
-#ga_domain: lzh173.github.io
+ga_domain: lzh173.github.io
 
 # Sidebar settings
 sidebar: true # whether or not using Sidebar.
@@ -90,7 +90,7 @@ page-mathjax: false
 # Friends
 friends:
   [
-    { title: "BA7KVH", href: "yangzifan1234@126.com" },
+    #{ title: "乱序（Midare）", href: "http://mida.re/" },
     #{ title: "Ebn Zhang", href: "https://ebnbin.dev/" },
     #{ title: "Kun Qian", href: "http://kunq.me" },
     #{ title: "Sherry Woo", href: "https://sherrywoo.me/" },
