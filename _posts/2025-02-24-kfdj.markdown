@@ -5,7 +5,7 @@ author:       "lzh-djw"
 header-style: text
 catalog:      true
 tags:
-    - JavaScript
+    - 德育分
 ---
 <table>
     <thead>
