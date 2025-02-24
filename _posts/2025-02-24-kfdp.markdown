@@ -1,6 +1,6 @@
 ---
 layout:       post
-title:        "0224德育分扣分登记"
+title:        "-1224德育分扣分登记"
 author:       "lzh-djw"
 header-style: text
 catalog:      true
