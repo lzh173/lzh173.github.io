@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>登录页面</title>
+	<link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+	<div class="login-container">
+		<form id="loginForm" autocomplete="off">
+			<h2>登录</h2>
+			<div class="input-group">
+				<input type="text" id="username" name="username" required>
+				<label for="username">用户名</label>
+				<div class="line"></div>
+				<i class="icon-account_circle icon"></i>
+			</div>
+			<div class="input-group">
+				<input type="password" id="password" name="password" required>
+				<label for="password">密码</label>
+				<div class="line"></div>
+				<i class="icon-vpn_key icon"></i>
+				<button type="button">
+					<i class="icon-visibility_off"></i>
+				</button>
+			</div>
+			<button type="submit">登录</button>
+			<p class="tip"></p>
+		</form>
+	</div>
+	<script src="js/jquery-3.7.1.min.js"></script>
+	<script src="js/login.js"></script>
+</body>
+</html>
