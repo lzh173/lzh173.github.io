@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班级积分系统</title>
+    <style>
+        body {
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            background-color: #f8e8ff;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #7a3e9d;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        th,
+        td {
+            border: 1px solid #d1a8e9;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #d9b3f1;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2e6ff;
+        }
+
+        button {
+            background-color: #7a3e9d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 2px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #9254b8;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #d1a8e9;
+            background-color: white;
+        }
+
+      .note {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+      .message {
+            text-align: center;
+            color: #7a3e9d;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>班级积分系统</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>小组</th>
+                <th>学号</th>
+                <th>姓名</th>
+                <th>积分</th>
+                <th>操作</th>
+                <th>备注</th>
+            </tr>
+        </thead>
+        <tbody id="studentList">
+            <!-- 动态生成学生信息 -->
+        </tbody>
+    </table>
+    <button onclick="sortByPersonalPoints()">个人积分排行榜</button>
+    <button onclick="sortByGroupPoints()">小组积分排行榜</button>
+    <button onclick="refreshData()">刷新</button>
+    <button onclick="downloadData()">下载当日数据</button>
+    <div id="message" class="message"></div>
+
+    <script>
+        const studentGroups = [
+            {
+                group: 1,
+                students: [
+                    { id: 5, name: '邓俊杰' },
+                    { id: 12, name: '陆启铭' },
+                    { id: 35, name: '黎钧浠' },
+                    { id: 31, name: '方晓彤' },
+                    { id: 8, name: '黎俊僖' },
+                    { id: 36, name: '罗毓贝' }
+                ]
+            },
+            {
+                group: 2,
+                students: [
+                    { id: 4, name: '邓焯曦' },
+                    { id: 17, name: '潘嘉谦' },
+                    { id: 11, name: '刘浩文' },
+                    { id: 47, name: '张逸嫣' },
+                    { id: 7, name: '关钧与' },
+                    { id: 2, name: '陈家福' }
+                ]
+            },
+            {
+                group: 3,
+                students: [
+                    { id: 16, name: '马浩钒' },
+                    { id: 33, name: '侯羽璇' },
+                    { id: 13, name: '陆子文' },
+                    { id: 9, name: '李奕鸿' },
+                    { id: 26, name: '杨睿泓' },
+                    { id: 30, name: '陈梓渝' }
+                ]
+            },
+            {
+                group: 4,
+                students: [
+                    { id: 49, name: '周欣愉' },
+                    { id: 34, name: '黎霏' },
+                    { id: 29, name: '蔡昕沄' },
+                    { id: 32, name: '关乐彤' },
+                    { id: 44, name: '许瑞欣' },
+                    { id: 20, name: '司徒仲言' }
+                ]
+            },
+            {
+                group: 5,
+                students: [
+                    { id: 38, name: '阮惠盈' },
+                    { id: 23, name: '佟尔悦' },
+                    { id: 24, name: '王遂立' },
+                    { id: 45, name: '杨善甜' },
+                    { id: 39, name: '沈懿敏' },
+                    { id: 1, name: '毕隽熙' }
+                ]
+            },
+            {
+                group: 6,
+                students: [
+                    { id: 41, name: '谢卓霖' },
+                    { id: 3, name: '陈昱朗' },
+                    { id: 28, name: '张杰齐' },
+                    { id: 14, name: '罗崇峻' },
+                    { id: 42, name: '谢姕澄' },
+                    { id: 21, name: '孙逸凡' },
+                    { id: 18, name: '秦柏霖' }
+                ]
+            },
+            {
+                group: 7,
+                students: [
+                    { id: 27, name: '张汉典' },
+                    { id: 10, name: '林哲瀚' },
+                    { id: 40, name: '肖咏诗' },
+                    { id: 48, name: '钟悦乔' },
+                    { id: 50, name: '朱琳晞' },
+                    { id: 22, name: '佟尔颜' }
+                ]
+            },
+            {
+                group: 8,
+                students: [
+                    { id: 37, name: '潘思韵' },
+                    { id: 19, name: '邵烨俊' },
+                    { id: 46, name: '杨子昕' },
+                    { id: 6, name: '高朗轩' },
+                    { id: 43, name: '徐博斯' },
+                    { id: 15, name: '罗迪轩' },
+                    { id: 25, name: '徐浩尧' },
+                ]
+            }
+        ];
+
+
+
+            //666的方法二分66
+
+        // 初始化学生数据
+        let students = [];
+        studentGroups.forEach(group => {
+            group.students.forEach(student => {
+                students.push({
+                    group: group.group,
+                    id: student.id,
+                    name: student.name,
+                    points: 0,
+                    notes: []
+                });
+            });
+        });
+
+        const subjects = [
+            "语文", "数学", "英语", "道法", "历史", "政治", "生物", "地理",
+            "音乐", "体育", "美术", "信息技术", "自习"
+        ];
+
+        const addReasons = [
+          ...subjects.map(subject => `交齐${subject}作业`),
+          ...subjects.map(subject => `${subject}课堂表现良好`)
+        ];
+
+        const minusReasons = [
+          ...subjects.map(subject => `${subject}纪律问题`),
+            "未7:25之前到班", "午休未按时回班",
+          ...subjects.map(subject => `未交${subject}作业`),
+            "卫生问题", "仪容仪表问题", "午休纪律问题", "午休座椅未整理", "动电脑"
+        ];
+
+        // 渲染学生列表
+        function renderStudents() {
+            const studentList = document.getElementById('studentList');
+            studentList.innerHTML = '';
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.group || '无'}</td>
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td id="points-${student.id}">${student.points}</td>
+                    <td>
+                        <select id="addReason-${student.id}">
+                            ${addReasons.map(reason => `<option value="${reason}">${reason}</option>`).join('')}
+                        </select>
+                        <button onclick="addPoints(${student.id})">加分</button>
+                        <select id="minusReason-${student.id}">
+                            ${minusReasons.map(reason => `<option value="${reason}">${reason}</option>`).join('')}
+                        </select>
+                        <button onclick="minusPoints(${student.id})">减分</button>
+                        <button onclick="clearAll(${student.id})">清空</button>
+                    </td>
+                    <td id="note-${student.id}" class="note">${student.notes.join('<br>')}</td>
+                `;
+                studentList.appendChild(row);
+            });
+        }
+
+        // 加分函数
+        function addPoints(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                const reason = document.getElementById(`addReason-${id}`).value;
+                student.points++;
+                student.notes.push(`+1 分：${reason}`);
+                document.getElementById(`points-${id}`).textContent = student.points;
+                document.getElementById(`note-${id}`).innerHTML = student.notes.join('<br>');
+                saveDataToLocalStorage();
+                showMessage(`${student.name} 加 1 分：${reason}`);
+            }
+        }
+
+        // 减分函数
+        function minusPoints(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                const reason = document.getElementById(`minusReason-${id}`).value;
+                student.points--;
+                student.notes.push(`-1 分：${reason}`);
+                document.getElementById(`points-${id}`).textContent = student.points;
+                document.getElementById(`note-${id}`).innerHTML = student.notes.join('<br>');
+                saveDataToLocalStorage();
+                showMessage(`${student.name} 减 1 分：${reason}`);
+            }
+        }
+
+        // 清空个人积分、小组积分关联和备注的函数
+        function clearAll(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                const group = student.group;
+                // 从小组积分中减去该学生原有的积分
+                const groupScores = {};
+                students.forEach(s => {
+                    if (!groupScores[s.group]) {
+                        groupScores[s.group] = 0;
+                    }
+                    groupScores[s.group] += s.points;
+                });
+                groupScores[group] -= student.points;
+
+                student.points = 0;
+                student.notes = [];
+                document.getElementById(`points-${id}`).textContent = 0;
+                document.getElementById(`note-${id}`).innerHTML = '';
+                saveDataToLocalStorage();
+                showMessage(`${student.name} 的积分和备注已清空，小组积分已相应调整`);
+            }
+        }
+
+        // 按个人积分排序
+        function sortByPersonalPoints() {
+            students.sort((a, b) => b.points - a.points);
+            renderStudents();
+            showMessage('已按个人积分从高到低排序');
+        }
+
+        // 按小组积分排序
+        function sortByGroupPoints() {
+            const groupScores = {};
+            students.forEach(student => {
+                const group = student.group;
+                if (group!== undefined &&!isNaN(group)) {
+                    if (!groupScores[group]) {
+                        groupScores[group] = 0;
+                    }
+                    groupScores[group] += student.points;
+                }
+            });
+
+            const groupScoreArray = Object.entries(groupScores).map(([group, score]) => ({ group: parseInt(group), score }));
+            groupScoreArray.sort((a, b) => b.score - a.score);
+
+            const studentList = document.getElementById('studentList');
+            studentList.innerHTML = '';
+            groupScoreArray.forEach(groupInfo => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td colspan="2">雁队 ${groupInfo.group}</td>
+                    <td colspan="2">小组积分 ${groupInfo.score}</td>
+                    <td colspan="2"></td>
+                `;
+                studentList.appendChild(row);
+            });
+
+            showMessage('已按小组积分从高到低排序');
+        }
+
+        // 保存数据到本地存储
+        function saveDataToLocalStorage() {
+            localStorage.setItem('students', JSON.stringify(students));
+        }
+
+        // 从本地存储加载数据
+        function loadDataFromLocalStorage() {
+            const storedData = localStorage.getItem('students');
+            if (storedData) {
+                const parsedData = JSON.parse(storedData);
+                // 检查加载的数据中小组信息是否正确
+                parsedData.forEach(student => {
+                    if (student.group === undefined) {
+                        const matchingGroup = studentGroups.find(g => g.students.some(s => s.id === student.id));
+                        if (matchingGroup) {
+                            student.group = matchingGroup.group;
+                        }
+                    }
+                });
+                students = parsedData;
+            }
+        }
+
+        // 显示提示信息
+        function showMessage(msg) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = msg;
+            setTimeout(() => {
+                messageDiv.textContent = '';
+            }, 3000);
+        }
+
+        // 刷新函数
+        function refreshData() {
+            loadDataFromLocalStorage();
+            students.forEach(student => {
+                student.points = 0;
+                student.notes = [];
+            });
+            saveDataToLocalStorage();
+            renderStudents();
+            showMessage('数据已刷新，积分和备注已重置');
+        }
+
+        // 下载数据函数
+        function downloadData() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const fileName = `${year}-${month}-${day}-班级积分数据.csv`;
+
+            let csvContent = "sep=,\n";
+            csvContent += "小组,学号,姓名,积分,备注\n";
+            students.forEach(student => {
+                csvContent += `"${student.group}","${student.id}","${student.name}","${student.points}","${student.notes.join(';')}"\n`;
+            });
+
+            // 添加小组积分榜数据
+            const groupScores = {};
+            students.forEach(student => {
+                const group = student.group;
+                if (group!== undefined &&!isNaN(group)) {
+                    if (!groupScores[group]) {
+                        groupScores[group] = 0;
+                    }
+                    groupScores[group] += student.points;
+                }
+            });
+            const groupScoreArray = Object.entries(groupScores).map(([group, score]) => ({ group: parseInt(group), score }));
+            groupScoreArray.sort((a, b) => b.score - a.score);
+
+            csvContent += "\n小组积分榜\n";
+            csvContent += "小组,小组积分\n";
+            groupScoreArray.forEach(groupInfo => {
+                csvContent += `雁队 ${groupInfo.group},${groupInfo.score}\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            if (window.navigator.msSaveOrOpenBlob) {
+                window.navigator.msSaveBlob(blob, fileName);
+            } else {
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // 页面加载时加载数据并渲染
+        window.onload = function () {
+            loadDataFromLocalStorage();
+            renderStudents();
+        };
+    </script>
+</body>
+
+</html>
