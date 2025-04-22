@@ -1,0 +1,28 @@
+---
+layout:       post
+title:        "机房管理助手LOL"
+author:       "lzh173"
+header-style: text
+catalog:      true
+tags:
+    - 编程
+    - 机房管理助手
+    - C#
+---
+
+## 机房管理助手已被全面破解，包括临时密码、主密码
+
+现将临时密码算法公布：`https://github.com/lzh173/jfglzs-password-dec`
+可自行下载密码计算器
+，或者直接使用下面的代码(10.1新版本)：
+
+```python
+    month_part = date_time.month * 13
+    day_part = date_time.day * 57
+    year_part = date_time.year * 91
+    total = (month_part + day_part + year_part) * 16 + 11
+```
+
+
+
+**本网站开源地址：`https://github.com/lzh173/lzh173.github.io/`如果可以给个star吧**

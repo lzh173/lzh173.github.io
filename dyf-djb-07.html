@@ -217,19 +217,20 @@
 
         const subjects = [
             "语文", "数学", "英语", "道法", "历史", "政治", "生物", "地理",
-            "音乐", "体育", "美术", "信息技术", "自习"
+            "音乐", "体育", "美术", "信息技术", "人工智能", "自习", "心理"
         ];
 
         const addReasons = [
-          ...subjects.map(subject => `交齐${subject}作业`),
-          ...subjects.map(subject => `${subject}课堂表现良好`)
+            ...subjects.map(subject => `${subject}课堂表现良好`),
+          ...subjects.map(subject => `交齐${subject}作业`)
+
         ];
 
         const minusReasons = [
           ...subjects.map(subject => `${subject}纪律问题`),
             "未7:25之前到班", "午休未按时回班",
           ...subjects.map(subject => `未交${subject}作业`),
-            "卫生问题", "仪容仪表问题", "午休纪律问题", "午休座椅未整理", "动电脑"
+            "卫生问题", "仪容仪表问题", "午休纪律问题", "午休座椅未整理", "午休迟到", "动电脑", "眼保健操纪律问题"
         ];
 
         // 渲染学生列表
