@@ -1,0 +1,16 @@
+---
+layout:       post
+title:        "0417德育分扣分登记"
+author:       "你们的电教员"
+header-style: text
+catalog:      true
+tags:
+    - 德育分
+---
+### 奇迹从来没出现
+
+
+
+
+
+**本网站开源地址：`https://github.com/lzh173/lzh173.github.io/`如果可以给个star吧**
