@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L-聊天室</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .link-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+            .btn:hover {
+                background-color: #2980b9;
+                text-decoration: none;
+            }
+
+        .info {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 30px;
+        }
+
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>L-聊天室</h1>
+
+        <div class="qr-code">
+            <!-- 这里可以放二维码图片 -->
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://6ea13f471345a75258.gradio.live" alt="聊天室二维码">
+        </div>
+
+        <div class="link-box">
+            <h2>当前最新地址：</h2>
+            <p><a href="https://6ea13f471345a75258.gradio.live" id="current-link">https://6ea13f471345a75258.gradio.live</a></p>
+            <a href="https://6ea13f471345a75258.gradio.live" class="btn">同意用户协议并访问聊天室</a>
+        </div>
+
+        <div>
+            <h2>用户协议</h2>
+            <ul id="a01iit">
+                <li>
+                    <strong>
+                        用户责任
+                    </strong>: 本聊天室的所有内容均由用户自发创建，不代表平台观点。用户应对自己发布的内容承担全部责任，确保不违反任何法律法规。
+                </li>
+                <li>
+                    <strong>
+                        内容审核
+                    </strong>：虽然我们会尽力监控不当内容，但无法实时审查所有聊天内容。如发现违规信息，请立即举报。
+                </li>
+                <li>
+                    <strong>
+                        禁止内容
+                    </strong>：禁止发布违法当地法律法规的内容。
+                </li>
+                <li>
+                    <strong>
+                        隐私说明
+                    </strong>：请勿在聊天室泄露个人敏感信息。聊天记录会在服务器保存，但不会用于其他商业用途，可联系管理员删除。
+                </li>
+                <li>
+                    <strong>
+                        关于数据储存
+                    </strong>：本聊天室的所有聊天内容将自动存储在服务器上，用于维持聊天记录连续性
+
+                    数据存储期限：最长保留30天（系统将自动清理超过期限的历史记录）
+
+                    存储内容包含：用户消息、发送时间、用户名（不存储IP地址等个人信息）。
+                </li>
+                <li>
+                    <strong>
+                        责任限制
+                    </strong>：平台不对用户间交流产生的任何纠纷负责，不担保信息的准确性、完整性或实用性。
+                </li>
+                <li>
+                    <strong>
+                        违规处理
+                    </strong>：违反规定的用户将被警告、禁言或永久封禁，且可能面临法律后果。
+                </li>
+                <li>
+                    <strong>
+                        未成年人保护
+                    </strong>：未成年人应在监护人指导下使用本服务。如有未成年人产生的纠纷，平台不负责任。
+                </li>
+            </ul>
+        </div>
+
+        <div class="info">
+            <p>如果遇到无法访问的情况，请稍后再试或联系管理员：p20210125@foxmail.com</p>
+            <p>请收藏本页面以获取最新地址通知</p>
+        </div>
+    </div>
+
+    <script>
+        // 可以在这里添加从后端获取最新地址的逻辑
+        // 例如：
+        // fetch('https://your-api-endpoint/latest-url')
+        //   .then(response => response.json())
+        //   .then(data => {
+        //     document.getElementById('current-link').href = data.url;
+        //     document.getElementById('current-link').textContent = data.url;
+        //   });
+
+        // 简单示例 - 从URL参数获取地址
+        const params = new URLSearchParams(window.location.search);
+        const customUrl = params.get('url');
+        if (customUrl) {
+            document.getElementById('current-link').href = customUrl;
+            document.getElementById('current-link').textContent = customUrl;
+            document.querySelector('.btn').href = customUrl;
+        }
+    </script>
+</body>
+</html>
