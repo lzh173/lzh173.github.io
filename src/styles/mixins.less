@@ -1,56 +1,31 @@
 // Mixins
+//
+// 字体栈与行高统一由 tokens.less 提供（单一事实来源）。
+// 这里只做别名，避免同一个字体栈在仓库里出现两份、日后改一处漏一处。
 
 .transition-all() {
-    -webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    transition: all 0.5s;
+    transition: all var(--dur) var(--ease);
 }
 
 .background-cover() {
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
     background-size: cover;
-    -o-background-size: cover;
 }
 
-.monospace () {
-    font-family: "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
+.monospace() {
+    font-family: var(--font-mono);
 }
 
 .serif() {
-	font-family: 'Lora', 'Times New Roman', serif;
+    font-family: var(--font-serif);
 }
 
-.sans-serif () {
-	/* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
+.sans-serif() {
+    /* 字体栈取自 TypeIsBeautiful 等讨论:
+     *   https://www.webkit.org/blog/3709/using-the-system-font-in-web-content/
+     * 具体顺序见 src/styles/tokens.less 的 --font-sans：
+     *   System -> English First ("Helvetica Neue", Arial)
+     *          -> Chinese Fallback (苹方/冬青黑体/华文黑体/微软雅黑/思源黑体/文泉驿/中易宋体)
      */
-	// 字体栈说明（LESS 4 不允许在多行值的逗号之间插注释，故注释集中放在上方）：
-	//   System Font  https://www.webkit.org/blog/3709/using-the-system-font-in-web-content/
-	//   -apple-system / BlinkMacSystemFont  OSX >=10.11 & iOS >=9  旧金山 & 苹方
-	//   English First: "Helvetica Neue"(OSX), Arial(Win "Helvetica")
-	//   Chinese Fallback: 苹方 / 冬青黑体 / 华文黑体 / 微软雅黑 / 微软正黑 /
-	//                     思源黑体(SourceHan) / 文泉驿微米黑 / 中易宋体 / 系统兜底
-	font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Helvetica Neue",
-        "Arial",
-        "PingFang SC",
-        "Hiragino Sans GB",
-        "STHeiti",
-        "Microsoft YaHei",
-        "Microsoft JhengHei",
-        "Source Han Sans SC",
-        "Noto Sans CJK SC",
-        "Source Han Sans CN",
-        "Noto Sans SC",
-        "Source Han Sans TC",
-        "Noto Sans CJK TC",
-        "WenQuanYi Micro Hei",
-        SimSun,
-        sans-serif;
-
-	line-height: 1.7;
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
 }

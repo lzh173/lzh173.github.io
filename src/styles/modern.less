@@ -1,0 +1,278 @@
+// ============================================================================
+//  现代层（modern layer）
+// ============================================================================
+//  这一层解决令牌层解决不了的问题：bootstrap.min.css 里的颜色是编译期固化的
+//  （Bootstrap 3 用 LESS 变量，产出的是字面量），var() 无法穿透，所以暗色模式
+//  必须在这里显式覆盖那些组件。
+//
+//  内容分四块：
+//    1. Preflight - 把 Bootstrap 的硬编码色接回令牌
+//    2. 排版微调 - 行长、标题节奏
+//    3. 可访问性 - focus-visible、reduced-motion、对比度
+//    4. 主题切换按钮
+//
+//  构建时本文件被单独编译并**追加**在 hux-blog.min.css 之后，
+//  因此同等特指度下它获胜。
+// ============================================================================
+
+// ---------------------------------------------------------------------------
+// 1. Preflight：Bootstrap 组件底色/文字接回令牌
+// ---------------------------------------------------------------------------
+
+body {
+  background-color: var(--surface);
+  color: var(--text);
+}
+
+// Bootstrap 给 hr / 表格 / 表单控件写死了颜色
+hr {
+  border-top-color: var(--border);
+}
+
+.table > tbody > tr > td,
+.table > tbody > tr > th,
+.table > thead > tr > td,
+.table > thead > tr > th {
+  border-top-color: var(--border);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: var(--surface-subtle);
+}
+
+// 文章里的表格：斑马纹 + 表头略作区分，长表格更好读
+.post-container table.table {
+  > thead > tr > th {
+    background-color: var(--surface-subtle);
+    border-bottom-width: 2px;
+  }
+  > tbody > tr:hover {
+    background-color: var(--brand-tint);
+  }
+}
+
+.form-control {
+  color: var(--text);
+  background-color: var(--surface-inset);
+  border-color: var(--border);
+
+  &:focus {
+    border-color: var(--brand);
+    // Bootstrap 的 box-shadow 是高亮蓝色，改为品牌色调
+    box-shadow: 0 0 0 3px var(--brand-tint);
+  }
+}
+
+// 代码块：Atom One Dark 本来就是深色，只把外框与滚动条统一
+.post-container pre,
+.post-container .highlight {
+  border-radius: var(--radius);
+  border: 1px solid var(--code-border);
+}
+
+// 引用块用左侧色条，比灰色斜体更清晰
+.post-container blockquote {
+  border-left: 3px solid var(--brand);
+  padding-left: var(--space-4);
+  color: var(--text-muted);
+  font-style: normal;
+}
+
+// ---------------------------------------------------------------------------
+// 2. 排版微调
+// ---------------------------------------------------------------------------
+
+// 正文限宽，避免超长行（原主题在大屏上可以拉到 100+ 字符）
+.post-container > p,
+.post-container > ul,
+.post-container > ol,
+.post-container > blockquote {
+  max-width: var(--measure);
+}
+
+.post-container {
+  h1 { font-size: var(--step-4); }
+  h2 { font-size: var(--step-3); }
+  h3 { font-size: var(--step-2); }
+  h4 { font-size: var(--step-1); }
+  h5,
+  h6 { font-size: var(--step-0); }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: var(--leading-tight);
+    scroll-margin-top: 80px; // 锚点跳转时不被固定导航盖住
+  }
+
+  // 原主题给 h2 加了一条分隔线，配合新的间距节奏略作收敛
+  h2::before {
+    border-bottom-color: var(--border-soft);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-4);
+  }
+}
+
+// 文章内图片：圆角 + 轻投影，替代裸图
+.post-container img {
+  border-radius: var(--radius);
+}
+.post-container img.shadow {
+  box-shadow: var(--shadow-md);
+}
+
+// ---------------------------------------------------------------------------
+// 3. 可访问性
+// ---------------------------------------------------------------------------
+
+// 键盘可见焦点。用 :focus-visible 而不是 :focus，
+// 避免鼠标点击时也出现焦点环。
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+// 原主题大量使用 :focus 改色，这里保证仍有可见指示
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+// 尊重"减少动效"偏好：关掉导航动画、过渡与平滑滚动
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  // 导航的滑入动画对这个偏好最不友好，直接跳过
+  #huxblog_navbar,
+  #huxblog_navbar .navbar-collapse,
+  #huxblog_navbar li {
+    transform: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+  }
+}
+
+// 屏幕阅读器专用文本（导航里补的跳转链接会用到）
+.sr-only-focusable:not(:focus):not(:focus-within) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ---------------------------------------------------------------------------
+// 3b. 导航在暗色下的适配
+// ---------------------------------------------------------------------------
+// 29 篇文章用 header-style: text => 导航是 .invert（文字深色，底为白）。
+// 4 个页面有英雄图 => 导航文字为白色，压在图上，两种模式都不用改。
+//
+// 问题出在 .invert：Bootstrap 3 的 .navbar-default 底色写死为白色，
+// 而 .invert 的文字用了令牌，暗色下会变成"浅字 + 白底"。
+// 这里把底与图标一并接回令牌。
+
+// 桌面端滚动后固定住的导航条：它是唯一有实体底色的状态
+.navbar-custom.is-fixed {
+  background-color: var(--surface-raised);
+  border-bottom-color: var(--border);
+}
+
+// 移动端汉堡图标。默认导航压在英雄图上，白色是必要的。
+// .invert 的深色图标已由 hux-blog.less 自身设为 --text-strong，此处不再重复覆盖。
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #ffffff;
+}
+
+// 移动端展开的导航面板
+@media only screen and (max-width: 767px) {
+  .navbar-default .navbar-collapse,
+  .navbar-custom .navbar-collapse {
+    background: var(--surface-raised);
+  }
+
+  // 展开面板里各链接的悬停底色
+  .navbar-custom .nav li a:active {
+    background: var(--brand-tint);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 4. 主题切换按钮
+// ---------------------------------------------------------------------------
+// HTML 由 src/js/tokens.js 注入（避免把按钮写进每个模板，
+// 也避免在模板里重复维护图标）。未启用 JS 时不显示，功能降级为跟随系统偏好。
+
+.theme-toggle {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1050;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background-color: var(--surface-raised);
+  color: var(--text);
+  box-shadow: var(--shadow-md);
+  transition: background-color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+
+  &:hover {
+    background-color: var(--surface-subtle);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  // 跟随系统模式时，图标表示"切到亮色"；手动暗色时表示"切到亮色"。
+  // 具体字符由 JS 写入，这里只负责尺寸与旋转过渡。
+  .theme-toggle__icon {
+    display: block;
+    transition: transform var(--dur) var(--ease);
+  }
+}
+
+// 手机上缩小一点，避开正文
+@media only screen and (max-width: 767px) {
+  .theme-toggle {
+    right: 12px;
+    bottom: 12px;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+// 打印时隐藏
+@media print {
+  .theme-toggle {
+    display: none !important;
+  }
+}

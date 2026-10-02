@@ -1,0 +1,159 @@
+// ============================================================================
+//  设计令牌
+// ============================================================================
+//  这些是「语义令牌」：名字描述用途，不描述外观。暗色模式只换值，不改规则。
+//  值的选取都经过 WCAG 对比度校验（见 README「设计令牌」一节）。
+//
+//  注意：本文件在构建时被 @import 到 hux-blog.less 的最前面，
+//  所以后面所有分文件（sidebar/side-catalog/search/snackbar/highlight）
+//  都能引用它。
+//
+//  局限：bootstrap.min.css 里的颜色是写死的（Bootstrap 3 用 LESS 变量在编译期
+//  固化），令牌无法穿透。暗色模式下针对 Bootstrap 组件的那部分覆盖，
+//  在 src/styles/modern.less 里通过 var() 单独处理。
+// ============================================================================
+
+:root {
+  color-scheme: light;
+
+  // ---- 品牌 ----
+  // 分三种角色，避免一个令牌身兼数职导致对比度不达标：
+  //   --brand         装饰用（描边、进度条、焦点环）：白底 4.31:1，
+  //                   作为大字号/非文字元素合格，但没有文字落在它上面。
+  //   --brand-surface 填充底（按钮、分页、::selection）：上面会放 --text-on-brand，
+  //                   #006d84 + 白字 = 5.96:1，达标。
+  //   --brand-text    当文字用：白底 5.96:1，达标。
+  --brand:         #0085a1;
+  --brand-surface: #006d84;
+  --brand-text:    #006d84;
+  --brand-strong:  #005a6e;
+  --brand-tint:    rgba(0, 133, 161, 0.08);
+
+  // ---- 文字 ----
+  --text:          #404040;  // 正文        白底 10.4:1
+  --text-strong:   #1f1f1f;  // 标题        白底 15.3:1
+  --text-muted:    #6b6b6b;  // 次要信息    白底  5.3:1
+  --text-faint:    #767676;  // 更次要      白底  4.5:1（AA 下限，勿再浅）
+  --text-on-brand: #ffffff;  // 品牌色上的文字
+  --link:          #337ab7;  // 正文内链接  白底 4.56:1
+
+  // ---- 表面 ----
+  --surface:        #ffffff;
+  --surface-subtle: #f7f8f8;  // 页面底色、卡片底
+  --surface-raised: #ffffff;  // 卡片（亮色下与 surface 同）
+  --surface-inset:  #f5f5f5;  // 输入框、代码块外围
+
+  // ---- 线条 ----
+  // 原来有 6 个几乎相同的浅灰散落在各文件（#eee/#ececec/#f3f5f5/#f5f5f5/#eaeaea/#e4e4e4），
+  // 统一成两档：--border 用于常规分隔，--border-soft 用于极轻的描边。
+  --border:      #e6e8e8;
+  --border-soft: #f0f1f1;
+
+  // ---- 阴影 ----
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.09);
+
+  // ---- 代码块 ----
+  // Atom One Dark 本来就是深色，两种模式下都保持深色，只统一来源。
+  --code-bg:     #282c34;
+  --code-border: rgba(255, 255, 255, 0.08);
+
+  // ---- 排版 ----
+  // 用 clamp() 做流体阶梯，去掉一批固定 px 与断点分支。
+  --step--1: clamp(0.8125rem, 0.79rem + 0.11vw, 0.875rem);  // 13 -> 14
+  --step-0:  clamp(1rem,      0.97rem + 0.15vw, 1.125rem);  // 16 -> 18
+  --step-1:  clamp(1.125rem,  1.08rem + 0.22vw, 1.25rem);   // 18 -> 20
+  --step-2:  clamp(1.25rem,   1.17rem + 0.4vw,  1.5rem);    // 20 -> 24
+  --step-3:  clamp(1.5rem,    1.35rem + 0.75vw, 2rem);      // 24 -> 32
+  --step-4:  clamp(1.875rem,  1.6rem + 1.4vw,  2.75rem);    // 30 -> 44
+  --step-5:  clamp(2.25rem,   1.85rem + 2vw,    3.5rem);    // 36 -> 56
+
+  --leading-tight:  1.25;
+  --leading-normal: 1.7;
+  --measure:        68ch;  // 正文最佳行长
+
+  // ---- 间距（4px 基准）----
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  // ---- 形状与动效 ----
+  --radius-sm: 4px;
+  --radius:    8px;
+  --radius-lg: 12px;
+  --radius-pill: 999em;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur:  180ms;
+
+  // ---- 字体 ----
+  // 只列一次，避免各文件重复定义字体栈导致不一致。
+  --font-sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial,
+    "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei",
+    "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC",
+    "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC",
+    "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
+  --font-mono: "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
+  --font-serif: "Lora", "Times New Roman", serif;
+}
+
+// ============================================================================
+//  暗色模式
+// ============================================================================
+//  两套触发方式，都不需要重新加载页面：
+//    a) 手动切换 —— <html data-theme="dark">，由 tokens.js 写入 localStorage
+//    b) 跟随系统 —— 未手动选择过时，prefers-color-scheme: dark
+//
+//  显式选过 light 时必须能盖过系统偏好，所以下面用 :not([data-theme='light'])
+//  限定媒体查询，而不是简单地写两条并列规则。
+// ============================================================================
+
+@dark-values: {
+  color-scheme: dark;
+
+  --brand:         #4fc3dc;
+  // 填充底在暗色下必须是深色：上面放的是白字。
+  // #1f6a78 + #ffffff = 6.19:1。之前误用较亮的 #2a7f96 只有 4.02:1。
+  --brand-surface: #1f6a78;
+  --brand-text:    #5dd0e8;
+  --brand-strong:  #7fdcf0;
+  --brand-tint:    rgba(79, 195, 220, 0.12);
+
+  --text:          #d6d9dc;
+  --text-strong:   #f2f4f6;
+  --text-muted:    #a8adb3;
+  --text-faint:    #9aa0a6;
+  // 与浅色模式保持同一个值：填充底在两种模式下都是深色，所以都配白字
+  --text-on-brand: #ffffff;
+  --link:          #7cc4ee;
+
+  --surface:        #16181a;
+  --surface-subtle: #1b1e20;
+  --surface-raised: #202427;
+  --surface-inset:  #101315;
+
+  --border:      #33383c;
+  --border-soft: #262b2e;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
+
+  --code-bg:     #1b1f26;
+  --code-border: rgba(255, 255, 255, 0.06);
+};
+
+// a) 手动切换
+html[data-theme="dark"] {
+  @dark-values();
+}
+
+// b) 跟随系统（仅在用户没有显式选过 light 时生效）
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    @dark-values();
+  }
+}

@@ -23,6 +23,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const ENTRIES = [
   'hux-blog',
+  'tokens',
   'archive',
   'snackbar',
   'sw-registration',

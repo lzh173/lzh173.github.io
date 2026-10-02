@@ -1,0 +1,49 @@
+# 统一行尾为 LF。
+#
+# 背景：Windows 上 core.autocrlf=true 会让 checkout 出来的文件变成 CRLF，
+# 而新建的文件是 LF，导致同一个目录里混着两种行尾（本仓库确实如此）。
+# 明确声明后，本机 / CI / Cloudflare Pages 三处的行为一致，
+# 也避免把 CRLF 混进构建产物。
+#
+# 二进制文件不做转换，否则会损坏（图片、字体、exe）。
+* text=auto eol=lf
+
+# ---- 明确的文本类型 ----
+*.html      text eol=lf
+*.markdown  text eol=lf
+*.md        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.json      text eol=lf
+*.js        text eol=lf
+*.mjs       text eol=lf
+*.cjs       text eol=lf
+*.less      text eol=lf
+*.css       text eol=lf
+*.xml       text eol=lf
+*.txt       text eol=lf
+*.rb        text eol=lf
+Rakefile    text eol=lf
+Gemfile     text eol=lf
+# Windows 批处理与 PowerShell 脚本对 LF 敏感，保持 CRLF
+*.cmd       text eol=crlf
+*.ps1       text eol=crlf
+
+# ---- 二进制，禁止转换 ----
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.webp      binary
+*.avif      binary
+*.woff      binary
+*.woff2     binary
+*.ttf       binary
+*.eot       binary
+*.exe       binary
+
+# ---- 构建产物/依赖，不参与统计与行尾处理 ----
+_site/          export-ignore
+node_modules/   export-ignore
+package-lock.json -diff linguist-generated

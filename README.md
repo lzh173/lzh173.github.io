@@ -148,6 +148,76 @@ GitHub Pages 不支持服务端重定向，所以采用「保留路径」的客�
 
 ---
 
+## 设计令牌与暗色模式
+
+样式分两层，构建时**依次拼接**成一个 `css/hux-blog.min.css`：
+
+| 层 | 源文件 | 作用 |
+| --- | --- | --- |
+| 令牌层 | `src/styles/tokens.less` | 定义语义令牌（颜色/字号/间距/圆角），并给出暗色取值 |
+| 主题层 | `src/styles/hux-blog.less` + `sidebar/side-catalog/search/snackbar/highlight.less` | 原有主题规则，颜色一律通过 `var(--token)` 取值 |
+| 现代层 | `src/styles/modern.less` | 覆盖 Bootstrap 3 的硬编码颜色、排版微调、可访问性、主题按钮 |
+
+**为什么需要独立编译再追加**：`bootstrap.min.css` 里的颜色是 Bootstrap 3 在编译期用
+LESS 变量固化成字面量的，`var()` 无法穿透。现代层必须排在 `bootstrap.min.css` 之后、
+同等特指度下才能获胜，所以它单独编译再追加。
+
+### 令牌是唯一事实来源
+
+字体栈只在 `tokens.less` 里定义一次（`--font-sans` / `--font-mono` / `--font-serif`），
+`mixins.less` 里的 `.sans-serif()` 等只做转发。改字体只需改一处。
+
+品牌色分三种角色，**不要混用**：
+
+| 令牌 | 用途 | 浅色值 | 对比度 |
+| --- | --- | --- | --- |
+| `--brand` | 装饰：描边、焦点环、引用条 | `#0085a1` | 白底 4.31:1（仅非文字元素） |
+| `--brand-surface` | 填充底：按钮、分页、`::selection` | `#006d84` | 配白字 5.96:1 |
+| `--brand-text` | 当文字用的品牌色 | `#006d84` | 白底 5.96:1 |
+
+> 早期版本让 `--brand` 同时承担装饰与填充，导致按钮上的白字只有 4.31:1（不达标）。
+> 拆出 `--brand-surface` 后达标。
+
+### 暗色模式
+
+两种触发方式，都不需要刷新页面：
+
+1. **手动** —— 点右下角按钮，写入 `localStorage.theme`，在 `<html>` 上加 `data-theme`
+2. **跟随系统** —— 未手动选择时，由 `@media (prefers-color-scheme: dark)` 决定
+
+防闪烁靠 `_includes/head.html` 里的一段**内联脚本**（必须早于首屏渲染，所以不能放到
+`tokens.min.js` 里）；交互逻辑在 `src/js/tokens.js`（产物 `js/tokens.min.js`）。
+
+CSS 里用 `html:not([data-theme='light'])` 限定媒体查询，这样显式选过 light 的用户
+不会被系统偏好覆盖。
+
+### 对比度
+
+所有文字/底色组合都按 WCAG AA（正文 4.5:1）校验过，**校的是编译产物里的实际值**：
+
+| | 浅色 | 暗色 |
+| --- | --- | --- |
+| 正文 / 页面底 | 10.37:1 | 12.56:1 |
+| 标题 / 页面底 | 16.48:1 | 16.15:1 |
+| 次要文字 / 页面底 | 5.33:1 | 7.88:1 |
+| 链接 / 页面底 | 4.56:1 | 9.31:1 |
+| 填充底上的文字 | 5.96:1 | 6.19:1 |
+
+改动令牌后请重新校验 —— 校验脚本要点：从 `:root{...}` 与 `html[data-theme=dark]{...}`
+里抽出实际值，计算相对亮度比，正文按 4.5:1、大字号按 3:1。
+
+### 已知取舍
+
+- `tokens.less` 里有若干档位（`--space-1/2/3/7/8`、`--step--1`、`--radius-lg`、
+  `--brand-strong`）当前未被引用。保留是为了让刻度完整、便于后续使用；代价只是
+  几行 CSS 变量声明。
+- `highlight.less` 里语法高亮的各个 token 颜色（`#abb2bf`、`#c678dd` 等）**刻意保持固定** ——
+  它们是为 One Dark 的深底调过的配色，随主题变化反而会失去对比。只有底色接了 `--code-bg`。
+- `snackbar.less` 带进来一批未被使用的 Material 组件样式（`.card`、`.paper-button` 等），
+  属上游遗留，未清理。
+
+---
+
 ## 样式与脚本的构建
 
 用 **npm scripts** 驱动，不再使用 Grunt（`Gruntfile.js` 已归档到 `_archive/`）：

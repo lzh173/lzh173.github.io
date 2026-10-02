@@ -1,16 +1,21 @@
 // Atom's One Dark theme for Jekyll
 // Credits: https://github.com/mgyongyosi/OneDarkJekyll/
+//
+// 底色改用 --code-bg 令牌：代码块在明暗两种模式下都保持深色，
+// 但暗色模式用更深一档，避免在深色页面上"浮起来"。
+// 语法高亮的各个 token 颜色（#abb2bf / #c678dd 等）刻意保持固定 ——
+// 它们是为 One Dark 的深底调过的配色，跟着主题变反而会失去对比。
 
 .highlight,
 pre.highlight {
-  background: #282c34;
+  background: var(--code-bg);
   color: #abb2bf;
 }
 .highlight pre {
-  background: #282c34;
+  background: var(--code-bg);
 }
 .highlight .hll {
-  background: #282c34;
+  background: var(--code-bg);
 }
 .highlight .c {
   color: #5c6370;

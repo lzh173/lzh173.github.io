@@ -25,6 +25,11 @@ if (!entry) {
   process.exit(1);
 }
 
+// 现代层：单独编译后**追加**在主样式之后。
+// 它要覆盖 bootstrap.min.css 里的硬编码颜色，而同等特指度下后者才生效。
+const MODERN_CANDIDATES = ['src/styles/modern.less', 'less/modern.less'];
+const modernEntry = MODERN_CANDIDATES.map((p) => path.join(ROOT, p)).find((p) => existsSync(p));
+
 const OUT = path.join(ROOT, 'css/hux-blog.min.css');
 
 const pkg = JSON.parse(await readFile(path.join(ROOT, 'package.json'), 'utf8'));
@@ -45,11 +50,25 @@ const result = await less.render(await readFile(entry, 'utf8'), {
   sourceMap: false, // 不产出 .map，避免生成却没有服务器提供
 });
 
+// 编译现代层（可能与主样式共用 tokens/mixins，所以 paths 要带上主样式目录）
+let modernCss = '';
+if (modernEntry) {
+  const modern = await less.render(await readFile(modernEntry, 'utf8'), {
+    filename: modernEntry,
+    paths: [path.dirname(modernEntry), path.dirname(entry)],
+    javascriptEnabled: false,
+    sourceMap: false,
+  });
+  modernCss = modern.css;
+}
+
+const combined = result.css + (modernCss ? '\n' + modernCss : '');
+
 const minified = new CleanCSS({
   level: 1,
   // 让 banner 的 /*! ... */ 原样保留
   specialComments: 'all',
-}).minify(result.css);
+}).minify(combined);
 
 if (minified.errors.length) {
   console.error('clean-css 错误:');
@@ -60,8 +79,11 @@ for (const w of minified.warnings) console.warn('  clean-css 警告: ' + w);
 
 await writeFile(OUT, banner + minified.styles, 'utf8');
 
-const pct = ((1 - minified.styles.length / result.css.length) * 100).toFixed(1);
+const pct = ((1 - minified.styles.length / combined.length) * 100).toFixed(1);
 console.log(
   `styles  ${path.relative(ROOT, entry).replace(/\\/g, '/')} -> css/hux-blog.min.css ` +
-    `(${minified.styles.length} B, 未压缩 ${result.css.length} B, -${pct}%)  ${Date.now() - started}ms`
+    `(${minified.styles.length} B, 未压缩 ${combined.length} B, -${pct}%)  ${Date.now() - started}ms`
 );
+if (modernEntry) {
+  console.log(`        + ${path.relative(ROOT, modernEntry).replace(/\\/g, '/')} (追加在现代层之后)`);
+}

@@ -37,6 +37,21 @@
 
     <title>{% if page.title %}{{ page.title }} - {{ site.SEOTitle }}{% else %}{{ site.SEOTitle }}{% endif %}</title>
 
+    <!-- 主题初始化：必须内联且早于首屏渲染，否则暗色模式会闪一下白 -->
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('theme');
+                if (t === 'dark' || t === 'light') {
+                    document.documentElement.setAttribute('data-theme', t);
+                }
+                // 未设置时什么都不做，交由 CSS 的 prefers-color-scheme 分支决定
+            } catch (e) {
+                /* 隐私模式下 localStorage 会抛异常，忽略即可 */
+            }
+        })();
+    </script>
+
     <!-- Web App Manifest -->
     <link rel="manifest" href="{{ site.baseurl }}/pwa/manifest.json">
 
