@@ -1,0 +1,13 @@
+# Cloudflare Pages 重定向
+# 语法参考: https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# 本文件以 _ 开头，Jekyll 不排除文件（只排除以 _ 开头的目录），
+# 会被原样复制进 _site/ 供 Cloudflare Pages 读取。
+#
+# 旧版积分页 -> 新版。旧地址曾是对外链接（见 _posts 里的说明文章），
+# 保留 301 以免旧链接失效。
+/dyf-djb-01-old.html  /dyf-djb-07.html  301
+
+# 相对路径尽量带尾部斜杠，避免 Cloudflare 在重定向后追加斜杠造成双跳
+/blog     /  301
+/blog/*   /:splat  301

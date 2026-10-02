@@ -1,0 +1,57 @@
+# 旧域名 lzh173.github.io 的保留路径跳转页
+#
+# 背景：博客已迁移到 Cloudflare Pages（https://blog.lzh173.chat）。
+# GitHub Pages 这一侧不再需要完整站点，只需把旧地址的访问者
+# 连同**原始路径与查询串**一起送到新域名：
+#
+#     lzh173.github.io/2025/04/06/blog/?x=1#y
+#  -> blog.lzh173.chat/2025/04/06/blog/?x=1#y
+#
+# 由 .github/workflows/redirect.yml 单独部署这个目录（只含本文件），
+# 因此学生名单等页面不会再出现在 lzh173.github.io 上。
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>已迁移至 blog.lzh173.chat</title>
+<link rel="canonical" href="https://blog.lzh173.chat/">
+<script>
+  (function () {
+    var target = new URL(location.pathname + location.search, 'https://blog.lzh173.chat');
+    target.hash = location.hash;
+    location.replace(target.href);
+  })();
+</script>
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    color: #333;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+                 "Microsoft YaHei", sans-serif;
+    line-height: 1.7;
+  }
+  main { max-width: 34rem; padding: 2rem; text-align: center; }
+  h1 { font-size: 1.25rem; margin: 0 0 0.75rem; }
+  p { margin: 0.5rem 0; }
+  a { color: #0085a1; }
+</style>
+<noscript>
+  <style>#js-hint { display: none; }</style>
+</noscript>
+</head>
+<body>
+<main>
+  <h1>本站已迁移</h1>
+  <p id="js-hint">正在跳转到新地址…</p>
+  <p>新地址：<a href="https://blog.lzh173.chat">blog.lzh173.chat</a></p>
+  <p>若没有自动跳转，请点击上面的链接。</p>
+</main>
+</body>
+</html>

@@ -16,15 +16,15 @@
 	</div>
 	<script type="text/javascript">
 		let accountAll = [{ // 存储账户json数据的数组
-			username: zq2,
+			username: 'zq2',
 			passwd: '1qaz'
 		},
 		{
-			username: lzh,
+			username: 'lzh',
 			passwd: '1qaz'
 		},
 		{
-			username: admin,
+			username: 'admin',
 			passwd: '1qaz'
 		}
 		]
@@ -39,7 +39,10 @@
 			} else {
 				if (account.username == username && account.passwd == passwd) {
 					alert('登陆成功');
-                    window.location.href = "https://lzh173.github.io/dyf-djb-01.html"
+					// 目标页面是 dyf-djb-07.html（旧版 dyf-djb-01-old.html 另存）。
+					// 原来写死的 dyf-djb-01.html 并不存在，登录成功后会 404。
+					// 用相对路径，避免绑定死域名。
+					window.location.href = "dyf-djb-07.html"
 				} else {
 					alert('密码错误');
 				}

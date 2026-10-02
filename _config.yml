@@ -1,11 +1,11 @@
 # Site settings
 title: lzh Blog
 SEOTitle: 电教委的博客 | lzh Blog
-header-img: img/avatar-hux.j.png
+header-img: img/avatar-lzh.png
 email: p20210125@foxmail.com
 description: "这里是 初一八班电教委 的个人博客，与你一起发现更大的世界 | 要做一个有梦想的人"
 keyword: "林哲瀚, BI7KGA, lzh, 电教委的博客, lzh Blog, 博客, 个人网站, 互联网, Web, Python, React, React Native, 前端, 设计"
-url: "https://lzh173.github.io/" # your host, for absolute URL
+url: "https://blog.lzh173.chat" # your host, for absolute URL（末尾不要斜杠，拼接时会出现双斜杠）
 baseurl: "" # for example, '/blog' if your blog hosted on 'host/blog'
 
 # Publish posts or collection documents with a future date.
@@ -17,22 +17,42 @@ weibo_username: lzh173
 zhihu_username: lzh173
 github_username: lzh173
 twitter_username: lzh173
-#facebook_username:  huxpro
-#linkedin_username:  firstname-lastname-idxxxx
+# 未使用的平台保持注释，留作模板示例：
+#facebook_username:  your-facebook
+#linkedin_username:  your-linkedin
 
 # Build settings
 # from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
 highlighter: rouge
 permalink: pretty
 paginate: 10
+# Jekyll 的 EntryFilter 会拒绝一切以 . _ # ~ 开头的**文件和目录**。
+# CNAME 不以 _ 开头会自动复制，但 Cloudflare Pages 的 _headers / _redirects
+# 必须在这里显式 include，否则不会进入 _site/。
+# 详见 lib/jekyll/entry_filter.rb 的 SPECIAL_LEADING_CHAR_REGEX。
+include:
+  - "_headers"
+  - "_redirects"
+# 说明：以 _ 开头的目录（_posts/_layouts/_includes/_plugins/_doc 等）
+# 由 Jekyll 默认排除，无需在此列出。这里只列「不以 _ 开头、但不该发布」的东西。
+# static/ 必须排除：它的内容由 _plugins/static_files.rb 映射到站点根目录，
+# 若不排除，Jekyll 还会把源目录原样再复制一份到 /static/。
 exclude:
   [
-    "less",
     "node_modules",
-    "Gruntfile.js",
     "package.json",
+    "package-lock.json",
+    "Gemfile",
+    "Gemfile.lock",
+    "Rakefile",
     "README.md",
-    "README.zh.md",
+    "LICENSE",
+    "scripts",
+    "src",
+    "static",
+    "redirect-site",
+    "lzh173.github.io",
+    "about_patch.exe",
   ]
 anchorjs: true # if you want to customize anchor. check out line:181 of `post.html`
 # If you have timezone issue (e.g. #68) in China, uncomment to use this:
@@ -59,7 +79,17 @@ kramdown:
       start_line: 1
 
 # Disqus settings
-disqus_username: lzh
+# 原来写的是 shortname "lzh"，这是极短字符串、几乎必然被他人注册，
+# 且 Disqus 会注入大量第三方脚本与广告。已关闭。
+#
+# 替代方案（推荐 Giscus：免费、无广告、基于 GitHub Discussions）：
+#   1. 在 GitHub 仓库 Settings → General → Features 勾选 Discussions
+#   2. 安装 Giscus App：https://github.com/apps/giscus
+#   3. 到 https://giscus.app/ 按仓库生成配置，把 <script> 片段放进 _layouts/post.html
+#   4. 中文站点也可考虑 Waline / Twikoo（需自建后端）
+#
+# 置为 false 即关闭评论区；改成你自己的 Disqus shortname 可重新启用。
+disqus_username: false
 # Netease settings
 netease_comment: false
 
@@ -68,13 +98,18 @@ netease_comment: false
 ba_track_id: [91ae4c8109047f90ea355c41f058d059]
 
 # Google Analytics
-#ga_track_id: "UA-49627206-1" # Format: UA-xxxxxx-xx
-ga_domain: lzh173.github.io
+# 注意：ga_domain 只有在 ga_track_id 同时启用时才有意义
+# （_includes/footer.html 的外层判断是 {% if site.ga_track_id %}）。
+# 两个一起取消注释才会生效；id 形如 "G-XXXXXXXXXX" 或旧版 "UA-XXXXXX-X"。
+#ga_track_id: ""
+#ga_domain: blog.lzh173.chat
 
 # Sidebar settings
 sidebar: true # whether or not using Sidebar.
 sidebar-about-description: "要做一个有梦想的人 <br> lzh @ bi7kga"
-sidebar-avatar: https://lzh173.github.io/img/QQ.png # use absolute URL, seeing it's used in both `/` and `/about/`
+# 以 / 开头：站内任何路径下都能正确解析（本主题没有用 <base>，
+# 所以这里不能用相对路径，否则 /about/ 页面会去找 /about/img/...）
+sidebar-avatar: /img/QQ.png
 
 # Featured Tags
 featured-tags: true # whether or not using Feature-Tags

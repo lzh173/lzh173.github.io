@@ -10,6 +10,12 @@
  * Licensed under Apache 2.0 
  */
 
+// NOTE: 这里原本写死了一段百度统计注入（ID cad5250cde745611b444ded132f2199f，
+// 指向模板作者账号）。该文件全站从未被加载（页面只用 hux-blog.min.js），
+// 但为免日后有人直接引用它而再次串号，已移除。
+// 统计统一由 _includes/footer.html 依据 site.ba_track_id 注入。
+
+
 // Tooltip Init
 // Unuse by Hux since V1.6: Titles now display by default so there is no need for tooltip
 // $(function() {
@@ -29,14 +35,6 @@
 
 // responsive tables
 
-
-var _hmt = _hmt || [];
-(function () {
-    var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?cad5250cde745611b444ded132f2199f";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-})();
 $(document).ready(function() {
     $("table").wrap("<div class='table-responsive'></div>");
     $("table").addClass("table");

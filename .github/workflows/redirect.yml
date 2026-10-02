@@ -1,0 +1,48 @@
+# 仅用于把旧域名 lzh173.github.io 的访问者重定向到
+# Cloudflare Pages 上的新地址 https://blog.lzh173.chat
+#
+# 只部署 redirect-site/ 这一个目录，所以旧域名上不再有完整站点
+# （含学生信息的页面、登录页等都随之下线）。
+#
+# 完整的博客构建已不再交给 GitHub Pages，见 README 的「部署」一节。
+
+name: Redirect old domain
+
+on:
+  push:
+    branches: ["master"]
+    paths:
+      - "redirect-site/**"
+      - ".github/workflows/redirect.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload redirect site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: redirect-site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

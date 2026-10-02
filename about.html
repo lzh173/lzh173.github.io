@@ -9,20 +9,36 @@ multilingual: true
 
 {% include multilingual-sel.html %}
 
-<!-- Chinese Version-->
+{% comment %}
+    这两个容器必须同时保留在 DOM 中：_includes/footer.html 的多语言脚本会
+    document.querySelector(".zh") / (".en") 取到它们并切换 display，
+    任一元素缺失都会导致 TypeError，语言切换失效。
 
-<!--<div class="zh post-container">
+    包在 Liquid 注释里避免 Markdown 内的 HTML 注释或 '--' 序列提前终止外层注释
+{% endcomment %}
+
+<!-- Chinese Version -->
+<div class="zh post-container">
     {% capture about_zh %}{% include about/zh.md %}{% endcapture %}
     {{ about_zh | markdownify }}
 </div>
 
 <!-- English Version -->
-<!--<div class="en post-container">
+<div class="en post-container">
     {% capture about_en %}{% include about/en.md %}{% endcapture %}
     {{ about_en | markdownify }}
 </div>
 
-
+{% comment %}
+    初始状态由上面的脚本置为 display:none，首屏不会同时闪出中英文两段内容。
+    multilingual-sel.html 与 footer 的 _render() 随后会显示正确的那一个。
+{% endcomment %}
+<style>
+    .post-container.zh,
+    .post-container.en {
+        display: none;
+    }
+</style>
 
 {% if site.disqus_username %}
 <!-- disqus 评论框 start -->

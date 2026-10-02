@@ -9,7 +9,9 @@ CONFIG = {
   'themes' => File.join(SOURCE, "_includes", "themes"),
   'layouts' => File.join(SOURCE, "_layouts"),
   'posts' => File.join(SOURCE, "_posts"),
-  'post_ext' => "md",
+  # 本站文章实际使用 .markdown 扩展名（29/29），与 Jekyll 的解析无关，
+  # 但保持一致可避免同一目录出现两种后缀。
+  'post_ext' => "markdown",
   'theme_package_version' => "0.1.0"
 }
 
@@ -32,14 +34,14 @@ task :post do
   end
 
   puts "Creating new post: #{filename}"
-  open(filename, 'w') do |post|
+  # Ruby 3.0 起 Kernel#open 不再接受块形式写文件，必须用 File.open
+  File.open(filename, 'w') do |post|
     post.puts "---"
     post.puts "layout: post"
     post.puts "title: \"#{title.gsub(/-/,' ')}\""
     post.puts "subtitle: \"#{subtitle.gsub(/-/,' ')}\""
     post.puts "date: #{date}"
-    post.puts "author: \"Hux\""
-    post.puts "header-img: \"img/post-bg-2015.jpg\""
+    post.puts "author: \"lzh173\""
     post.puts "tags: []"
     post.puts "---"
   end
@@ -47,8 +49,6 @@ end # task :post
 
 desc "Launch preview environment"
 task :preview do
-  system "jekyll --auto --server"
+  # --auto 是 Jekyll 2 的写法；本项目用 Jekyll 4，本地预览见 scripts/serve.cmd
+  system "bundle exec jekyll serve --livereload"
 end # task :preview
-
-#Load custom rake scripts
-Dir['_rake/*.rake'].each { |r| load r }

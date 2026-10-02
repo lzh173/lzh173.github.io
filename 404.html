@@ -14,3 +14,34 @@ permalink: /404.html
 <script>
 	document.body.classList.add('page-fullscreen');
 </script>
+
+<!--
+	旧域名跳转（保留路径）。
+
+	GitHub Pages 对任何没有对应文件的路径都会渲染本站的 /404.html，
+	并且保留原始 URL。所以这个页面同时充当「旧域名 lzh173.github.io 的
+	全站重定向」—— 新地址是 blog.lzh173.chat，路径与查询串原样带过去：
+
+	    lzh173.github.io/2025/04/06/blog/?x=1#y
+	 -> blog.lzh173.chat/2025/04/06/blog/?x=1#y
+
+	只在本站确实是从旧域名访问时才跳转，因此本地预览
+	（127.0.0.1）与新域名自身都能正常显示这个 404 页面。
+-->
+<script>
+	(function () {
+		var OLD_HOSTS = ['lzh173.github.io', 'www.lzh173.github.io'];
+		var NEW_ORIGIN = 'https://blog.lzh173.chat';
+
+		if (OLD_HOSTS.indexOf(location.hostname) === -1) return;
+
+		var target = new URL(location.pathname + location.search, NEW_ORIGIN);
+		target.hash = location.hash;
+		location.replace(target.href);
+	})();
+</script>
+
+<p class="text-center">
+	本站已迁移至 <a href="https://blog.lzh173.chat">blog.lzh173.chat</a>。
+	若浏览器没有自动跳转，请点击该链接。
+</p>

@@ -1,63 +1,251 @@
-[Hux Blog](https://huangxuan.me)
-================================
+# lzh Blog
 
-> I never expected this to become popular.
+初一八班电教委的个人博客 —— <https://blog.lzh173.chat/>
 
-![](http://huangxuan.me/img/blog-desktop.jpg)
+> 部署在 **Cloudflare Pages**。旧地址 `lzh173.github.io` 通过保留路径的方式
+> 重定向到新域名（见「部署」一节）。
 
+基于 [Hux Blog](https://github.com/Huxpro/huxpro.github.io) 主题二次开发（Apache 2.0），
+用 Jekyll 构建，部署在 GitHub Pages。上游主题的原始文档在 [`_doc/upstream/`](_doc/upstream/)，仅供参考。
 
-[User Manual 👉](_doc/Manual.md)
---------------------------------------------------
+---
 
-### Getting Started
+## 本地预览
 
-1. You will need [Ruby](https://www.ruby-lang.org/en/) and [Bundler](https://bundler.io/) to use [Jekyll](https://jekyllrb.com/). Following [Using Jekyll with Bundler](https://jekyllrb.com/tutorials/using-jekyll-with-bundler/) to fullfill the enviromental requirement.
+### 前置环境
 
-2. Installed dependencies in the `Gemfile`:
+Ruby 由 Chocolatey 安装，位于 `C:\tools\ruby34`。若在**新开的终端**里找不到 `ruby`，
+用仓库自带的脚本即可（它会自己设置 PATH）：
 
-```sh
-$ bundle install 
+```cmd
+scripts\serve.cmd
 ```
 
-3. Serve the website (`localhost:4000` by default):
+然后打开 <http://127.0.0.1:4000/>。改动 `_posts/`、`_layouts/`、`_includes/` 会自动重建。
 
-```sh
-$ bundle exec jekyll serve  # alternatively, npm start
+### 手动命令
+
+```powershell
+# 当前终端先补 PATH
+$env:Path = "C:\tools\ruby34\bin;C:\tools\devkit\bin;$env:Path"
+
+bundle install                 # 首次，或 Gemfile 变更后
+bundle exec jekyll serve --livereload
+bundle exec jekyll build       # 只构建到 _site/
 ```
 
-### Development (Build From Source)
+> `Gemfile.lock` **必须入库**。`.gitignore` 里 `*.lock` 那条规则专门加了 `!Gemfile.lock` 例外，
+> 否则 CI 无法复现依赖版本。
 
-To modify the theme, you will need [Grunt](https://gruntjs.com/). There are numbers of tasks you can find in the `Gruntfile.js`, includes minifing JavaScript, compiling `.less` to `.css`, adding banners to keep the Apache 2.0 license intact, watching for changes, etc. 
+---
 
-Yes, they were inherited and are extremely old-fashioned. There is no modularization and transpilation, etc.
+## 怎么写一篇新文章
 
-Critical Jekyll-related code are located in `_include/` and `_layouts/`. Most of them are [Liquid](https://github.com/Shopify/liquid/wiki) templates.
+在 `_posts/` 新建 `YYYY-MM-DD-slug.markdown`：
 
-This theme uses the default code syntax highlighter of jekyll, [Rouge](http://rouge.jneen.net/), which is compatible with Pygments theme so just pick any pygments theme css (e.g. from [here](http://jwarby.github.io/jekyll-pygments-themes/languages/javascript.html) and replace the content of `highlight.less`.
+```yaml
+---
+layout:       post
+title:        "文章标题"
+author:       "lzh173"
+header-style: text      # 纯文字标题（本仓库 29 篇全是这个）
+catalog:      true      # 注意：模板实际读的是 no-catalog，这个字段目前无效果
+tags:
+    - 标签
+---
+```
 
+也可以用 Rakefile 生成骨架：
 
-### Interesting to know more? Checkout the [full user manual](_doc/Manual.md)!
+```powershell
+bundle exec rake post title="文章标题"
+```
 
+**日期取自文件名**，不需要在 front matter 里写 `date`（写了会覆盖文件名里的日期）。
 
-Other Resources
----------------
+---
 
-Ports
-- [**Hexo**](https://github.com/Kaijun/hexo-theme-huxblog) by @kaijun
-- [**React-SSR**](https://github.com/LucasIcarus/huxpro.github.io/tree/ssr) by @LucasIcarus
+## 目录结构
 
-[Starter/Boilerplate](https://github.com/huxpro/huxblog-boilerplate)
-- Out of date. Helps wanted for updating it on par with the main repo
+| 路径 | 说明 |
+| --- | --- |
+| `_posts/` | 文章（29 篇） |
+| `_layouts/` | `default` / `post` / `page` |
+| `_includes/` | 页面组件（导航、页脚、侧栏、搜索、多语言等） |
+| `_plugins/static_files.rb` | 把 `static/` 映射到站点根目录 |
+| `src/styles/` | LESS 源码（8 个文件） |
+| `src/js/` | 站点脚本源码 |
+| `src/vendor/` | 第三方未压缩源（`jquery.js`、`bootstrap.js/css`），模板不引用，仅存档 |
+| `scripts/` | 构建脚本（Node ESM） |
+| `css/` | **构建产物**：`bootstrap.min.css`、`hux-blog.min.css` |
+| `js/` | **构建产物** + 运行时 vendor：`hux-blog.min.js`、`jquery.min.js`、`bootstrap.min.js`、`jquery.nav.js`、`jquery.tagcloud.js`、`simple-jekyll-search.min.js` |
+| `img/` | 图片 |
+| `static/` | **见下方说明**：内容直接发布到站点根目录 |
+| `fonts/` | Bootstrap 3 的 glyphicons |
+| `_archive/` | 已停用资源与废弃模板（见下方说明） |
+| `_doc/upstream/` | 上游主题文档 |
 
-Translation
-- [🇨🇳  中文文档（有点过时）](https://github.com/Huxpro/huxpro.github.io/blob/master/_doc/README.zh.md)
+---
 
+## 部署（Cloudflare Pages）
 
-License
--------
+产线地址：**<https://blog.lzh173.chat>**，由 Cloudflare Pages 构建。GitHub Pages 已不再承载站点。
 
-Apache License 2.0.
-Copyright (c) 2015-present Huxpro
+### Cloudflare Pages 项目设置
 
-Hux Blog is derived from [Clean Blog Jekyll Theme (MIT License)](https://github.com/BlackrockDigital/startbootstrap-clean-blog-jekyll/)
-Copyright (c) 2013-2016 Blackrock Digital LLC.
+| 项 | 值 |
+| --- | --- |
+| Production branch | `master` |
+| 构建命令 | `npm ci && npm run build && bundle exec jekyll build` |
+| 输出目录 | `_site` |
+| 环境变量 | 无需 |
+
+Cloudflare 的构建镜像默认已含 **Ruby 3.4.4** 与 **Node 22**
+（见 [Build image](https://developers.cloudflare.com/pages/configuration/build-image/)）。
+本机用的是 Ruby 3.4.11（Chocolatey），与 3.4.4 同属 3.4 线，`Gemfile` 的约束
+（`jekyll ~> 4.0`）对两者都成立。
+
+> 如果想彻底钉死版本，可以在仓库根目录加 `.ruby-version`（内容如 `3.4.4`）与
+> `.nvmrc`（内容如 `22`）。**目前故意没加** —— 钉到 3.4.4 会与本机的 3.4.11 不一致，
+> 反而制造环境漂移；镜像滚动更新时再按需添加即可。
+
+### 仓库里需要 Cloudflare 读取的文件
+
+这三个都在仓库根目录，Jekyll 会把它们原样复制进 `_site/`：
+
+| 文件 | 作用 |
+| --- | --- |
+| `CNAME` | 自定义域名 `blog.lzh173.chat` |
+| `_headers` | 响应头：安全头 + 分级缓存策略 |
+| `_redirects` | `/dyf-djb-01-old.html` → `/dyf-djb-07.html` 等 301 |
+
+> ⚠️ `_headers` 与 `_redirects` **必须**在 `_config.yml` 的 `include:` 里显式列出。
+> Jekyll 的 `EntryFilter` 会拒绝一切以 `_` 开头的文件与目录，不加 include 就不会进产物。
+
+### 域名配置（需在 Cloudflare 控制台操作）
+
+1. 把 `lzh173.chat` 接入 Cloudflare（若尚未接入）
+2. Pages 项目 → **Custom domains** → 添加 `blog.lzh173.chat`
+   （因为该 zone 已在 Cloudflare，会自动创建 DNS 记录；无需手工加 CNAME）
+
+### 旧域名 lzh173.github.io 的重定向
+
+GitHub Pages 不支持服务端重定向，所以采用「保留路径」的客户端跳转：
+
+- `404.html` 会检测访问者是否来自 `lzh173.github.io`，若是则把
+  **原始路径 + 查询串 + hash** 一起送到新域名。GitHub Pages 对任何没有对应文件的
+  路径都会渲染 `404.html` 且保留原 URL，因此这一招能覆盖全站。
+- `redirect-site/index.html` 是**只含跳转**的独立站点，由
+  `.github/workflows/redirect.yml` 单独部署到 GitHub Pages。
+
+**要点：GitHub Actions 现在只发布 `redirect-site/`，不再构建完整博客。**
+因此旧域名上不会再出现学生名单、登录页等页面。原来的完整站点工作流
+（`.github/workflows/jekyll.yml`）已归档到 `_archive/.github/workflows/`。
+
+> 这样做的代价是：`lzh173.github.io` 上仍会保留一份跳转页。
+> 如果你想更彻底，可以先确认新站点无恙，再停用 GitHub Pages 并从仓库移除
+> `redirect-site/` 与 `redirect.yml`，让旧地址直接 404。
+
+---
+
+## 样式与脚本的构建
+
+用 **npm scripts** 驱动，不再使用 Grunt（`Gruntfile.js` 已归档到 `_archive/`）：
+
+```powershell
+npm install          # 首次
+npm run build        # 编译 LESS + 压缩 JS
+npm run watch        # 监听 src/styles 与 src/js，改动自动重建
+npm run serve        # 启动 Jekyll 预览（含 livereload）
+```
+
+| 命令 | 作用 |
+| --- | --- |
+| `npm run build:styles` | `src/styles/hux-blog.less` → `css/hux-blog.min.css`（less 4 + clean-css） |
+| `npm run build:scripts` | `src/js/hux-blog.js` → `js/hux-blog.min.js`（esbuild） |
+| `npm run build:jekyll` | 只跑 `bundle exec jekyll build` |
+| `npm run clean` | 删除 `_site/` |
+
+**改了 `src/styles/` 或 `src/js/` 之后必须跑一次 `npm run build`**，否则页面加载的还是旧产物。
+两个脚本都会在产物顶部写入 banner（版本、作者、年份取自 `package.json`）。
+
+> 关于 `src/vendor/`：里面是 jQuery 与 Bootstrap 的**未压缩源码**，用于对照与重新压缩。
+> 页面实际加载的是 `js/jquery.min.js`（jQuery 2.1.3）和 `js/bootstrap.min.js`，
+> 这两者是从 `src/vendor/` 派生出来的独立文件，不在构建链里。
+>
+> ⚠️ 已知问题：`src/vendor/jquery.js` 是 **v2.1.3**，而仓库里还曾有一个 v3.7.1
+> （已归档到 `_archive/js/jquery-3.7.1.min.js`）。升级 jQuery 需要先确认
+> `jquery.nav.js` / `jquery.tagcloud.js` 的兼容性，尚未处理。
+
+---
+
+## `static/` —— 放进去就出现在站点根目录
+
+`static/` 用来放那些**不属于 Jekyll 站点、但需要能被 URL 访问**的独立页面与文件。
+放进去后，其相对路径就是访问路径：
+
+| 源文件 | 访问地址 |
+| --- | --- |
+| `static/login-dyf-djb.html` | `/login-dyf-djb.html` |
+| `static/.well-known/verify.txt` | `/.well-known/verify.txt` |
+| `static/sub/a.txt` | `/sub/a.txt` |
+
+实现见 [`_plugins/static_files.rb`](_plugins/static_files.rb)：它在 `post_read` 阶段把
+这些文件注册进 `site.static_files`，因此 Jekyll 的清理阶段不会误删它们。
+
+> ⚠️ **不是保密手段。** 内容会随站点公开，仓库本身也是公开的。
+> 凭据、密钥、个人数据**根本不要放进仓库**。`static/.gitignore` 只是防手滑的提示，
+> 而且它自己不会被发布。
+
+> ⚠️ **GitHub Pages 的默认构建器禁止自定义插件**，所以在那里 `static/` 不会生效。
+> 它在本地 `jekyll build/serve`、**Cloudflare Pages**、以及 GitHub Actions 里都正常。
+> 如果继续用 GitHub Pages，这些页面需要保持在仓库根目录。
+
+### 目前 `static/` 里有什么
+
+| 文件 | 说明 |
+| --- | --- |
+| `login-dyf-djb.html` | 班级积分系统登录页（**纯前端假校验，密码明文，见"已知问题"**） |
+| `dyf-djb-07.html` | 班级积分系统（新版） |
+| `dyf-djb-01-old.html` | 班级积分系统（旧版，与新版仅 3 处差异） |
+| `is83h2xn59dn2.html` | lzh ARG 预告页 |
+| `L-CHATROOM-011232.html` | 聊天室入口页 |
+| `about_patch.exe` | 239,616 字节的加壳 VB.NET 程序，来源与用途不明。**未分析、未运行** |
+
+---
+
+## `_archive/` —— 已停用，但保留
+
+`_archive/` 存放从站点移除、但保留备查的文件（已被 `_config.yml` 的 `exclude` 排除，不参与构建）：
+
+| 内容 | 原因 |
+| --- | --- |
+| `_archive/img/post-bg-*.jpg` 等 20+ 张 | 上游主题示例文章的头图，随示例文章删除后遗留 |
+| `_archive/img/in-post/post-alitrip-pd/`、`post-nextgen-web-pwa/`、`post-wmu/`、`post-js-version/`、`post-eleme-pwa/` | 上游示例文章的配图，已无任何引用 |
+| `_archive/_includes/posts/2017-07-12-upgrading-eleme-to-pwa/` | 饿了么 PWA 全文（他人作品），对应文章早已删除 |
+| `_archive/_layouts/keynote.html` | 孤儿布局，无任何页面使用 |
+
+`img/` 因此从 12.16 MB 降到约 3.6 MB。**这些文件没有被删除**，确认站点无问题后可自行清理。
+
+---
+
+## 已知问题
+
+1. **`disqus_username: lzh`** —— `lzh` 是极短字符串，很可能已被他人注册，评论区大概率加载失败。
+   如果要评论功能，请在 `_config.yml` 里换成你自己注册的 Disqus shortname；不需要就去掉这一行。
+2. **隐私** —— `_posts/` 里有 26 篇"德育分扣分登记"，包含全班同学的**姓名与学号**；
+   `dyf-djb-07.html` / `dyf-djb-01-old.html` 里各自硬编码了同一份 50 人名单。
+   这些内容会进入 `search.json` 和 `feed.xml`，而仓库与站点都是公开的。
+   **尚未处理，需要你决定。**
+3. **`login-dyf-djb.html`** —— 纯前端假校验，三个账号的密码 `1qaz` 明文写在页面里，
+   且该口令已存在于 git 历史（提交 `5148e6f`、`9dfc0c6`）。**尚未处理。**
+4. **`about_patch.exe`** —— 见上文 `_static/` 一节；它当前存在于一个**尚未推送**的提交 `154f2ce` 里。
+5. **文章头图** —— 29 篇全部是 `header-style: text`，模板的 `.style-text` 规则会
+   把背景图设为 `none`，所以文章页没有头图。这是主题的既定行为，不是 bug。
+
+---
+
+## 许可
+
+站点内容版权归作者所有。主题部分来自 Hux Blog，遵循 Apache License 2.0，
+原始版权声明见 [`LICENSE`](LICENSE)（**请勿删除**）。
