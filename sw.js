@@ -13,17 +13,23 @@ const CACHE_NAMESPACE = 'main-'
 const CACHE = CACHE_NAMESPACE + 'precache-then-runtime';
 const PRECACHE_LIST = [
   "./",
-  "./offline.html",
   "./js/jquery.min.js",
   "./js/bootstrap.min.js",
   "./js/hux-blog.min.js",
-  "./js/snackbar.js",
+  "./js/snackbar.min.js",
+  "./js/sw-registration.min.js",
   "./img/icon_wechat.png",
   "./img/avatar-lzh.png",
   "./img/home-bg.jpg",
   "./img/404-bg.jpg",
   "./css/hux-blog.min.css",
   "./css/bootstrap.min.css"
+  // 注意：这里不要放 "./offline.html"。
+  // Cloudflare Pages 会把 *.html 统一 308 到去掉后缀的路径，
+  // cache.addAll() 遇到重定向会 reject，导致整份预缓存失败。
+  // 离线兜底在 fetch 事件里按需取 /offline.html，重定向由浏览器正常跟随。
+  //
+  // 同理，往这个清单里新增任何条目之前，先确认它在线上返回 200 而不是 3xx。
   // "//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css",
   // "//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/fonts/fontawesome-webfont.woff2?v=4.6.3",
   // "//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js"
@@ -99,9 +105,46 @@ const getRedirectUrl = (req) => {
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(cache => {
-      return cache.addAll(PRECACHE_LIST)
-        .then(self.skipWaiting())
-        .catch(err => console.log(err))
+      // 逐项预缓存，而不是用 cache.addAll()。
+      //
+      // 原因：cache.addAll() 是原子的 —— 清单里只要有一项返回 404 或 3xx，
+      // 整个 Promise 就 reject，整份预缓存全部作废，而且这个失败很容易被
+      // .catch 静默吞掉，表现为「离线功能莫名不可用」。
+      // 本项目已经因此踩过两次坑：
+      //   1) 清单里写了已重命名的 img/avatar-hux.jpg
+      //   2) Cloudflare Pages 把 offline.html 308 到 /offline
+      // 逐项处理可以让单项失败不影响其余，并且把失败项明确打印出来。
+      //
+      // 仍然保留 addAll 的语义：全部成功才 skipWaiting()，
+      // 避免半成品缓存被当成可用版本。
+      const failed = []
+
+      const tasks = PRECACHE_LIST.map(url =>
+        fetch(url, { credentials: 'same-origin' })
+          .then(res => {
+            // 显式拒绝重定向：res.redirected 为真说明该 URL 不回 200，
+            // 缓存它会在离线时命中一个指向别处的响应。
+            if (!res.ok || res.redirected) {
+              throw new Error(`${url} -> ${res.status}${res.redirected ? ' (redirected)' : ''}`)
+            }
+            return cache.put(url, res)
+          })
+          .catch(err => {
+            failed.push(String(err.message || err))
+          })
+      )
+
+      return Promise.all(tasks).then(() => {
+        if (failed.length) {
+          console.error(
+            `[sw] 预缓存有 ${failed.length}/${PRECACHE_LIST.length} 项失败，` +
+              `本次不激活，离线功能保持不可用：\n  - ` + failed.join('\n  - ')
+          )
+          throw new Error('precache incomplete')
+        }
+        console.log(`[sw] 预缓存完成，共 ${PRECACHE_LIST.length} 项`)
+        return self.skipWaiting()
+      })
     })
   )
 });

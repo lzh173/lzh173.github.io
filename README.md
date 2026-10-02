@@ -78,7 +78,7 @@ bundle exec rake post title="文章标题"
 | `src/vendor/` | 第三方未压缩源（`jquery.js`、`bootstrap.js/css`），模板不引用，仅存档 |
 | `scripts/` | 构建脚本（Node ESM） |
 | `css/` | **构建产物**：`bootstrap.min.css`、`hux-blog.min.css` |
-| `js/` | **构建产物** + 运行时 vendor：`hux-blog.min.js`、`jquery.min.js`、`bootstrap.min.js`、`jquery.nav.js`、`jquery.tagcloud.js`、`simple-jekyll-search.min.js` |
+| `js/` | **构建产物** + 运行时 vendor：`hux-blog.min.js`、`archive.min.js`、`snackbar.min.js`、`sw-registration.min.js`、`jquery.min.js`、`bootstrap.min.js`、`jquery.nav.js`、`jquery.tagcloud.js`、`simple-jekyll-search.min.js` |
 | `img/` | 图片 |
 | `static/` | **见下方说明**：内容直接发布到站点根目录 |
 | `fonts/` | Bootstrap 3 的 glyphicons |
@@ -162,9 +162,24 @@ npm run serve        # 启动 Jekyll 预览（含 livereload）
 | 命令 | 作用 |
 | --- | --- |
 | `npm run build:styles` | `src/styles/hux-blog.less` → `css/hux-blog.min.css`（less 4 + clean-css） |
-| `npm run build:scripts` | `src/js/hux-blog.js` → `js/hux-blog.min.js`（esbuild） |
+| `npm run build:scripts` | `src/js/*.js` → `js/*.min.js`（esbuild，4 个入口，见下） |
 | `npm run build:jekyll` | 只跑 `bundle exec jekyll build` |
 | `npm run clean` | 删除 `_site/` |
+
+`build:scripts` 处理的 4 个入口，**源在 `src/js/`、运行时产物在 `js/`，两者不可混用**：
+
+| 源 | 产物 | 用途 |
+| --- | --- | --- |
+| `src/js/hux-blog.js` | `js/hux-blog.min.js` | 滚动导航、响应式表格与 iframe |
+| `src/js/archive.js` | `js/archive.min.js` | 归档页标签筛选（仅 `/archive/` 加载） |
+| `src/js/snackbar.js` | `js/snackbar.min.js` | 底部提示条 |
+| `src/js/sw-registration.js` | `js/sw-registration.min.js` | 注册 Service Worker |
+
+> ⚠️ `snackbar.min.js` 必须在 `sw-registration.min.js` **之前**加载 ——
+> 后者会调用前者定义的 `createSnackbar`。
+>
+> ⚠️ `_includes/footer.html` 引用的是 `js/*.min.js`（产物），不是 `src/js/*.js`（源）。
+> 往 `src/js/` 加文件后，记得同步改模板路径与 `sw.js` 的 `PRECACHE_LIST`。
 
 **改了 `src/styles/` 或 `src/js/` 之后必须跑一次 `npm run build`**，否则页面加载的还是旧产物。
 两个脚本都会在产物顶部写入 banner（版本、作者、年份取自 `package.json`）。

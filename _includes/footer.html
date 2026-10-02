@@ -34,8 +34,8 @@
 
 <!-- Service Worker -->
 {% if site.service-worker %}
-<script src="{{ "/js/snackbar.js" | prepend: site.baseurl }}"></script>
-<script src="{{ "/js/sw-registration.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/js/snackbar.min.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/js/sw-registration.min.js" | prepend: site.baseurl }}"></script>
 {% endif %}
 
 <!-- async load function -->
@@ -102,7 +102,7 @@
         $('#tag_cloud a').tagcloud();
     })
 </script>
-<script src='{{ "/js/archive.js" | prepend: site.baseurl }}'></script>
+<script src='{{ "/js/archive.min.js" | prepend: site.baseurl }}'></script>
 {% endif %}
 
 <!--fastClick.js -->

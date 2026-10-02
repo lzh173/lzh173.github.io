@@ -6,7 +6,11 @@
 #
 # 旧版积分页 -> 新版。旧地址曾是对外链接（见 _posts 里的说明文章），
 # 保留 301 以免旧链接失效。
-/dyf-djb-01-old.html  /dyf-djb-07.html  301
+#
+# 目标故意写成不带 .html 的形式：Cloudflare Pages 会把 *.html 统一 308 到
+# 去后缀的路径，若这里也写 .html 就会产生一次多余跳转
+# （301 -> 308 -> 200）。直达可以省掉一跳。
+/dyf-djb-01-old.html  /dyf-djb-07  301
 
 # 相对路径尽量带尾部斜杠，避免 Cloudflare 在重定向后追加斜杠造成双跳
 /blog     /  301
