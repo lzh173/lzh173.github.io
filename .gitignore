@@ -6,9 +6,13 @@ node_modules
 .vscode
 *.log
 *.lock
+# Gemfile.lock 必须入库：Cloudflare Pages / CI 靠它复现依赖版本
+!Gemfile.lock
 *.sh
 .DS_Store
 .jekyll-cache
 */.DS_Store
 */*/.DS_Store
-/.vs
+# .vs 出现在任意层级（原写法 /.vs 只锚定仓库根，漏掉了 lzh173.github.io/.vs/）
+.vs/
+/.wrangler
